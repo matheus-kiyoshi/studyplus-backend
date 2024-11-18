@@ -85,17 +85,9 @@ export class UsersService {
       throw new HttpException('Error creating user', 500);
     }
 
-    const createdClient = await this.prisma.client.create({
-      data: {
-        userId: createdUser.id,
-      },
-    });
-    if (!createdClient) {
-      throw new HttpException('Error creating client', 500);
-    }
-
     return {
       ...createdUser,
+      id: undefined,
       password: undefined,
     };
   }
@@ -232,7 +224,7 @@ export class UsersService {
       },
     });
 
-    const link = `cultiva.com/passwordReset?token=${resetToken}&id=${user.id}`;
+    const link = `studyplus.com/passwordReset?token=${resetToken}&id=${user.id}`;
 
     sendEmail(
       user.email,

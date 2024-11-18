@@ -37,4 +37,18 @@ export class CreateUserDto extends User {
   })
   @IsString()
   name: string;
+
+  @ApiProperty({
+    example: 'I want to learn how to code',
+    description: `The goal will be used to identify the user's main objective in the application.`,
+    type: 'string',
+  })
+  goal?: string;
+
+  @ApiProperty({
+    example: 4,
+    description: `The daily time will be used to identify the available user's daily study time (in hours) in the application.`,
+    type: 'number',
+  })
+  dailyTime?: number | null;
 }
