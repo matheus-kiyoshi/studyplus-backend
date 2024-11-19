@@ -1,14 +1,14 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
 import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
-import * as nodemailer from 'nodemailer';
+import { sendEmail } from '../lib/utils/sendEmail';
 
 type A<T extends string> = T extends `${infer U}ScalarFieldEnum` ? U : never;
 type Entity = A<keyof typeof Prisma>;
@@ -30,37 +30,6 @@ export function prismaExclude<T extends Entity, K extends Keys<T>>(
     }
   }
   return result;
-}
-
-export async function sendEmail(
-  userEmail: string,
-  subject: string,
-  text: string,
-  html: string,
-) {
-  const transporter = nodemailer.createTransport({
-    service: 'Outlook',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: userEmail,
-    subject: subject,
-    text: text,
-    html: html,
-  };
-
-  return transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error', error);
-    } else {
-      console.log('Email sent', info.response);
-    }
-  });
 }
 
 @Injectable()

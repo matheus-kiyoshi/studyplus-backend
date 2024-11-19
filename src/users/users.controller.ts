@@ -14,8 +14,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { IsPublic } from 'src/auth/decorators/is-public.decorator';
-import { AuthRequest } from 'src/auth/models/AuthRequest';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { AuthRequest } from '../auth/models/AuthRequest';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
 import { RequestPasswordUserDto } from './dto/request-password-reset.dto';
