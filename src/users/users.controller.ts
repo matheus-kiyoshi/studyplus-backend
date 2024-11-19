@@ -28,7 +28,7 @@ export class UsersController {
 
   @IsPublic()
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create user' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -36,6 +36,7 @@ export class UsersController {
 
   @IsPublic()
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all users' })
   findAll() {
     return this.usersService.findAll();
@@ -43,6 +44,7 @@ export class UsersController {
 
   @IsPublic()
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user by id' })
   findById(@Param('id') id: string) {
     return this.usersService.findById(id);
@@ -50,7 +52,7 @@ export class UsersController {
 
   @ApiBearerAuth('JWT-auth')
   @Patch()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user informations' })
   update(@Request() req: AuthRequest, @Body() updateUserDto: UpdateUserDto) {
     if (req.user.id) {
@@ -62,7 +64,7 @@ export class UsersController {
 
   @ApiBearerAuth('JWT-auth')
   @Delete()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete user' })
   remove(@Request() req: AuthRequest) {
     if (req.user.id) {
@@ -74,7 +76,7 @@ export class UsersController {
 
   @ApiBearerAuth('JWT-auth')
   @Patch('password')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user password' })
   updatePassword(
     @Request() req: AuthRequest,
@@ -92,7 +94,7 @@ export class UsersController {
 
   @IsPublic()
   @Patch('password/requestreset')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Request password reset link via email' })
   requestPasswordRest(@Body() requestPasswordUserDto: RequestPasswordUserDto) {
     return this.usersService.requestPasswordReset(requestPasswordUserDto.email);
@@ -100,7 +102,7 @@ export class UsersController {
 
   @IsPublic()
   @Patch('password/reset')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Reset user password' })
   resetPassword(@Body() resetPasswordUserDto: ResetPasswordUserDto) {
     return this.usersService.resetPassword(resetPasswordUserDto);
@@ -108,6 +110,7 @@ export class UsersController {
 
   @IsPublic()
   @Get('search/:searchArg')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Search users by name or email' })
   findBySearchArg(@Param('searchArg') searchArg: string) {
     return this.usersService.findBySearchArg(searchArg);

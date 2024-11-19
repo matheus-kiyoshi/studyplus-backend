@@ -4,23 +4,23 @@ import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 
 @Injectable()
 export class StudyPlansService {
-  create(createStudyPlanDto: CreateStudyPlanDto) {
+  create(userId: string, createStudyPlanDto: CreateStudyPlanDto) {
     return 'This action adds a new studyPlan';
   }
 
-  findAll() {
+  findAll(userId: string) {
     return `This action returns all studyPlans`;
   }
 
-  findById(id: number) {
+  findById(userId: string, id: number) {
     return `This action returns a #${id} studyPlan`;
   }
 
-  update(id: number, updateStudyPlanDto: UpdateStudyPlanDto) {
+  update(userId: string, id: number, updateStudyPlanDto: UpdateStudyPlanDto) {
     return `This action updates a #${id} studyPlan`;
   }
 
-  remove(id: number) {
+  remove(userId: string, id: number) {
     return `This action removes a #${id} studyPlan`;
   }
 }
