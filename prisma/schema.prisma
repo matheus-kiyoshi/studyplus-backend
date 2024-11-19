@@ -19,38 +19,52 @@ model User {
   createdAt  DateTime @default(now())
 
   StudyPlans StudyPlans[]
-
-  Reviews Reviews[]
+  Subjects   Subjects[]
+  Activities Activities[]
+  Reviews    Reviews[]
 }
 
 model StudyPlans {
-  id         String    @id @default(uuid())
+  id         String          @id @default(uuid())
   userId     String
-  name       String    @db.VarChar(55)
+  name       String          @db.VarChar(55)
   startDate  DateTime
   endDate    DateTime?
-  goal       String    @db.VarChar(255)
-  hoursGoal  Int       @default(0)
-  hoursSpent Int       @default(0)
-  status     String?   @default("active")
-  createdAt  DateTime  @default(now())
+  goal       String          @db.VarChar(255)
+  hoursGoal  Int             @default(0)
+  hoursSpent Int             @default(0)
+  status     StudyPlanStatus @default(ACTIVE)
+  createdAt  DateTime        @default(now())
 
-  User     User       @relation(fields: [userId], references: [id])
-  Subjects Subjects[]
+  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PlanSubjects PlanSubjects[]
 }
 
 model Subjects {
   id          String   @id @default(uuid())
-  planId      String
+  userId      String
   name        String   @db.VarChar(35)
   description String   @db.VarChar(255)
   timeSpent   Int      @default(0)
   color       String
   createdAt   DateTime @default(now())
 
-  StudyPlans StudyPlans @relation(fields: [planId], references: [id])
+  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Topics       Topics[]
+  Activities   Activities[]
+  PlanSubjects PlanSubjects[]
+}
 
-  Topics Topics[]
+model PlanSubjects {
+  id          String   @id @default(uuid())
+  studyPlanId String
+  subjectId   String
+  priority    Int      @default(0) @map("priority_level")
+  hoursTarget Int?     @default(0)
+  createdAt   DateTime @default(now())
+
+  StudyPlans StudyPlans @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+  Subjects   Subjects   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
 model Topics {
@@ -61,20 +75,50 @@ model Topics {
   timeSpent   Int      @default(0)
   createdAt   DateTime @default(now())
 
-  Subjects Subjects @relation(fields: [subjectId], references: [id])
-  Review   Reviews?
+  Subjects   Subjects     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  Activities Activities[]
+}
+
+model Activities {
+  id                  String    @id @default(uuid())
+  userId              String
+  subjectId           String
+  topicId             String
+  startDate           DateTime
+  studyTime           Int
+  questionsDone       Int?
+  questionsCorrect    Int?
+  scheduledReviewDate DateTime?
+  createdAt           DateTime  @default(now())
+
+  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Subjects Subjects @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  Topics   Topics   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  Reviews  Reviews?
 }
 
 model Reviews {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   userId         String
-  topicId        String   @unique
-  timesReviewed  Int      @default(0)
+  activityId     String       @unique
+  timesReviewed  Int          @default(0)
   lastReviewedAt DateTime
   nextReviewAt   DateTime
-  status         String?  @default("pending")
-  createdAt      DateTime @default(now())
+  status         ReviewStatus @default(PENDING)
+  createdAt      DateTime     @default(now())
 
-  User  User   @relation(fields: [userId], references: [id])
-  Topic Topics @relation(fields: [topicId], references: [id])
+  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Activities Activities @relation(fields: [activityId], references: [id], onDelete: Cascade)
+}
+
+enum StudyPlanStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ReviewStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
 }

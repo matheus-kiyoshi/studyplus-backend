@@ -10,7 +10,8 @@ export class User implements Prisma.UserUncheckedCreateInput {
   dailyTime?: number | null;
   totalHours?: number;
   createdAt?: Date | string;
-  accessToken?: string;
   StudyPlans?: Prisma.StudyPlansUncheckedCreateNestedManyWithoutUserInput;
+  Subjects?: Prisma.SubjectsUncheckedCreateNestedManyWithoutUserInput;
+  Activities?: Prisma.ActivitiesUncheckedCreateNestedManyWithoutUserInput;
   Reviews?: Prisma.ReviewsUncheckedCreateNestedManyWithoutUserInput;
 }

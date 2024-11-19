@@ -12,7 +12,7 @@ export class StudyPlansService {
     return `This action returns all studyPlans`;
   }
 
-  findOne(id: number) {
+  findById(id: number) {
     return `This action returns a #${id} studyPlan`;
   }
 
