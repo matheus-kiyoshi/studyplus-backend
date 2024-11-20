@@ -1,5 +1,6 @@
 import {
   IsDateString,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -7,6 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { $Enums } from '@prisma/client';
 
 export class CreateStudyPlanDto {
   @ApiProperty({
@@ -61,4 +63,14 @@ export class CreateStudyPlanDto {
   @IsOptional()
   @IsNumber()
   hoursSpent?: number;
+
+  @ApiProperty({
+    example: 'ACTIVE',
+    description: `The status of the study plan.`,
+    required: false,
+    enum: $Enums.StudyPlanStatus,
+  })
+  @IsOptional()
+  @IsEnum($Enums.StudyPlanStatus)
+  status?: $Enums.StudyPlanStatus;
 }

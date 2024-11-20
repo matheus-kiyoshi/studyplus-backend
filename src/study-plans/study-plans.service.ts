@@ -131,6 +131,6 @@ export class StudyPlansService {
       throw new HttpException('Error deleting study plan', 500);
     }
 
-    return 'Study plan deleted successfully';
+    return;
   }
 }
