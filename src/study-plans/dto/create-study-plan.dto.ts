@@ -1,18 +1,18 @@
 import {
   IsDateString,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { StudyPlan } from '../entities/study-plan.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateStudyPlanDto extends StudyPlan {
+export class CreateStudyPlanDto {
   @ApiProperty({
     example: 'Study Plan 1',
-    description: `The name will be used to identify the study plan in the application.`,
-    type: 'string',
+    description: `The name of the study plan.`,
+    required: true,
   })
   @IsString()
   @MinLength(4)
@@ -20,34 +20,45 @@ export class CreateStudyPlanDto extends StudyPlan {
   name: string;
 
   @ApiProperty({
-    example: '2022-01-01',
-    description: `The start date will be used to identify the study plan's start date in the application.`,
-    type: 'string',
+    example: '2024-08-08',
+    description: `The start date of the study plan.`,
+    required: true,
   })
   @IsDateString()
-  startDate: Date | string;
+  startDate: Date;
 
   @ApiProperty({
-    example: '2026-01-01',
-    description: `The end date will be used to identify the study plan's end date in the application.`,
-    type: 'string',
+    example: '2024-12-31',
+    description: `The end date of the study plan.`,
+    required: false,
   })
+  @IsOptional()
   @IsDateString()
-  endDate?: Date | string | null;
+  endDate?: Date | null;
 
   @ApiProperty({
-    example: 'I want to learn how to code',
-    description: `The goal will be used to identify the study plan's main objective in the application.`,
-    type: 'string',
+    example: 'Learn programming in 6 months',
+    description: `The main goal of the study plan.`,
+    required: true,
   })
   @IsString()
   goal: string;
 
   @ApiProperty({
-    example: 800,
-    description: `The hours goal will be used to identify the study plan's main objective in the application.`,
-    type: 'number',
+    example: 100,
+    description: `The total number of hours dedicated to the study plan.`,
+    required: false,
   })
+  @IsOptional()
   @IsNumber()
   hoursGoal?: number;
+
+  @ApiProperty({
+    example: 0,
+    description: `The total number of hours already spent on the study plan.`,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  hoursSpent?: number;
 }

@@ -1,6 +1,8 @@
 import { User } from '../entities/user.entity';
 import {
   IsEmail,
+  IsNumber,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -13,6 +15,7 @@ export class CreateUserDto extends User {
     example: 'user@email.com',
     description: `The email will be used to identify the user in the application and will be used to login.`,
     type: 'string',
+    required: true,
   })
   @IsEmail()
   email: string;
@@ -21,6 +24,7 @@ export class CreateUserDto extends User {
     example: 'strongPassword123',
     description: `The password will be used to login.`,
     type: 'string',
+    required: true,
   })
   @IsString()
   @MinLength(4)
@@ -34,6 +38,7 @@ export class CreateUserDto extends User {
     example: 'Harry Edward',
     description: `The name will be used to identify the user in the application.`,
     type: 'string',
+    required: true,
   })
   @IsString()
   name: string;
@@ -42,13 +47,19 @@ export class CreateUserDto extends User {
     example: 'I want to learn how to code',
     description: `The goal will be used to identify the user's main objective in the application.`,
     type: 'string',
+    required: false,
   })
+  @IsOptional()
+  @IsString()
   goal?: string;
 
   @ApiProperty({
     example: 4,
     description: `The daily time will be used to identify the available user's daily study time (in hours) in the application.`,
     type: 'number',
+    required: false,
   })
+  @IsOptional()
+  @IsNumber()
   dailyTime?: number | null;
 }

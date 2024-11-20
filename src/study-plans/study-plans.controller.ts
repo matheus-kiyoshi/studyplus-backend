@@ -15,7 +15,7 @@ import { StudyPlansService } from './study-plans.service';
 import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
 import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthRequest } from 'src/auth/models/AuthRequest';
+import { AuthRequest } from '../auth/models/AuthRequest';
 
 @ApiTags('Study Plans')
 @Controller('study-plans')
@@ -55,7 +55,7 @@ export class StudyPlansController {
   @ApiOperation({ summary: 'Get study plan by id' })
   findById(@Request() req: AuthRequest, @Param('id') id: string) {
     if (req.user.id) {
-      return this.studyPlansService.findById(req.user.id, +id);
+      return this.studyPlansService.findById(req.user.id, id);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
@@ -71,11 +71,7 @@ export class StudyPlansController {
     @Body() updateStudyPlanDto: UpdateStudyPlanDto,
   ) {
     if (req.user.id) {
-      return this.studyPlansService.update(
-        req.user.id,
-        +id,
-        updateStudyPlanDto,
-      );
+      return this.studyPlansService.update(req.user.id, id, updateStudyPlanDto);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
@@ -87,7 +83,7 @@ export class StudyPlansController {
   @ApiOperation({ summary: 'Delete study plan' })
   remove(@Request() req: AuthRequest, @Param('id') id: string) {
     if (req.user.id) {
-      return this.studyPlansService.remove(req.user.id, +id);
+      return this.studyPlansService.remove(req.user.id, id);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
