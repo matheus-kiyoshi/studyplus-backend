@@ -9,7 +9,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  HttpException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -55,11 +54,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user informations' })
   update(@Request() req: AuthRequest, @Body() updateUserDto: UpdateUserDto) {
-    if (req.user.id) {
-      return this.usersService.update(req.user.id, updateUserDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -67,11 +62,7 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete user' })
   remove(@Request() req: AuthRequest) {
-    if (req.user.id) {
-      return this.usersService.remove(req.user.id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.usersService.remove(req.user.id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -82,14 +73,7 @@ export class UsersController {
     @Request() req: AuthRequest,
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
   ) {
-    if (req.user.id) {
-      return this.usersService.updatePassword(
-        req.user.id,
-        updateUserPasswordDto,
-      );
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.usersService.updatePassword(req.user.id, updateUserPasswordDto);
   }
 
   @IsPublic()
@@ -121,11 +105,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user study plans' })
   findUserStudyPlans(@Request() req: AuthRequest) {
-    if (req.user.id) {
-      return this.usersService.findUserStudyPlans(req.user.id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.usersService.findUserStudyPlans(req.user.id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -133,10 +113,6 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user subjects' })
   findUserSubjects(@Request() req: AuthRequest) {
-    if (req.user.id) {
-      return this.usersService.findUserSubjects(req.user.id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.usersService.findUserSubjects(req.user.id);
   }
 }

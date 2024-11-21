@@ -9,7 +9,6 @@ import {
   Request,
   HttpCode,
   HttpStatus,
-  HttpException,
 } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
@@ -30,11 +29,7 @@ export class SubjectsController {
     @Request() req: AuthRequest,
     @Body() createSubjectDto: CreateSubjectDto,
   ) {
-    if (req.user.id) {
-      return this.subjectsService.create(req.user.id, createSubjectDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.create(req.user.id, createSubjectDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -42,11 +37,7 @@ export class SubjectsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all user subjects' })
   findAll(@Request() req: AuthRequest) {
-    if (req.user.id) {
-      return this.subjectsService.findAll(req.user.id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.findAll(req.user.id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -54,11 +45,7 @@ export class SubjectsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get subject by id' })
   findById(@Request() req: AuthRequest, @Param('id') id: string) {
-    if (req.user.id) {
-      return this.subjectsService.findById(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.findById(req.user.id, id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -70,11 +57,7 @@ export class SubjectsController {
     @Param('id') id: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
   ) {
-    if (req.user.id) {
-      return this.subjectsService.update(req.user.id, id, updateSubjectDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.update(req.user.id, id, updateSubjectDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -82,11 +65,7 @@ export class SubjectsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete subject' })
   remove(@Request() req: AuthRequest, @Param('id') id: string) {
-    if (req.user.id) {
-      return this.subjectsService.remove(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.remove(req.user.id, id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -97,10 +76,6 @@ export class SubjectsController {
     @Request() req: AuthRequest,
     @Param('id') id: string,
   ) {
-    if (req.user.id) {
-      return this.subjectsService.getStudyPlansForSubject(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.subjectsService.getStudyPlansForSubject(req.user.id, id);
   }
 }

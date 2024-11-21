@@ -9,7 +9,6 @@ import {
   HttpCode,
   HttpStatus,
   Request,
-  HttpException,
 } from '@nestjs/common';
 import { StudyPlansService } from './study-plans.service';
 import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
@@ -31,11 +30,7 @@ export class StudyPlansController {
     @Request() req: AuthRequest,
     @Body() createStudyPlanDto: CreateStudyPlanDto,
   ) {
-    if (req.user.id) {
-      return this.studyPlansService.create(req.user.id, createStudyPlanDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.create(req.user.id, createStudyPlanDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -43,11 +38,7 @@ export class StudyPlansController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all user study plans' })
   findAll(@Request() req: AuthRequest) {
-    if (req.user.id) {
-      return this.studyPlansService.findAll(req.user.id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.findAll(req.user.id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -55,11 +46,7 @@ export class StudyPlansController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get study plan by id' })
   findById(@Request() req: AuthRequest, @Param('id') id: string) {
-    if (req.user.id) {
-      return this.studyPlansService.findById(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.findById(req.user.id, id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -71,11 +58,7 @@ export class StudyPlansController {
     @Param('id') id: string,
     @Body() updateStudyPlanDto: UpdateStudyPlanDto,
   ) {
-    if (req.user.id) {
-      return this.studyPlansService.update(req.user.id, id, updateStudyPlanDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.update(req.user.id, id, updateStudyPlanDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -83,11 +66,7 @@ export class StudyPlansController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete study plan' })
   remove(@Request() req: AuthRequest, @Param('id') id: string) {
-    if (req.user.id) {
-      return this.studyPlansService.remove(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.remove(req.user.id, id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -100,16 +79,12 @@ export class StudyPlansController {
     @Param('subjectId') subjectId: string,
     @Body() assignSubjectToStudyPlanDto: AssignSubjectToStudyPlanDto,
   ) {
-    if (req.user.id) {
-      return this.studyPlansService.assignSubjectToStudyPlan(
-        req.user.id,
-        id,
-        subjectId,
-        assignSubjectToStudyPlanDto,
-      );
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.assignSubjectToStudyPlan(
+      req.user.id,
+      id,
+      subjectId,
+      assignSubjectToStudyPlanDto,
+    );
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -117,10 +92,6 @@ export class StudyPlansController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get study plan subjects' })
   getSubjectsByStudyPlan(@Request() req: AuthRequest, @Param('id') id: string) {
-    if (req.user.id) {
-      return this.studyPlansService.getSubjectsByStudyPlan(req.user.id, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.studyPlansService.getSubjectsByStudyPlan(req.user.id, id);
   }
 }

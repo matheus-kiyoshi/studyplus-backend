@@ -9,7 +9,6 @@ import {
   HttpStatus,
   HttpCode,
   Request,
-  HttpException,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
@@ -31,11 +30,7 @@ export class TopicsController {
     @Param('subjectId') subjectId: string,
     @Body() createTopicDto: CreateTopicDto,
   ) {
-    if (req.user.id) {
-      return this.topicsService.create(req.user.id, subjectId, createTopicDto);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.topicsService.create(req.user.id, subjectId, createTopicDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -43,11 +38,7 @@ export class TopicsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all subject topics' })
   findAll(@Request() req: AuthRequest, @Param('subjectId') subjectId: string) {
-    if (req.user.id) {
-      return this.topicsService.findAll(req.user.id, subjectId);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.topicsService.findAll(req.user.id, subjectId);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -59,11 +50,7 @@ export class TopicsController {
     @Param('subjectId') subjectId: string,
     @Param('id') id: string,
   ) {
-    if (req.user.id) {
-      return this.topicsService.findById(req.user.id, subjectId, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.topicsService.findById(req.user.id, subjectId, id);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -76,16 +63,12 @@ export class TopicsController {
     @Param('id') id: string,
     @Body() UpdateTopicDto: UpdateTopicDto,
   ) {
-    if (req.user.id) {
-      return this.topicsService.update(
-        req.user.id,
-        subjectId,
-        id,
-        UpdateTopicDto,
-      );
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.topicsService.update(
+      req.user.id,
+      subjectId,
+      id,
+      UpdateTopicDto,
+    );
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -97,10 +80,6 @@ export class TopicsController {
     @Param('subjectId') subjectId: string,
     @Param('id') id: string,
   ) {
-    if (req.user.id) {
-      return this.topicsService.remove(req.user.id, subjectId, id);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    return this.topicsService.remove(req.user.id, subjectId, id);
   }
 }
