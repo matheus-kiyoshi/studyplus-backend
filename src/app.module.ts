@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { StudyPlansModule } from './study-plans/study-plans.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TopicsModule } from './topics/topics.module';
+import { ActivitiesModule } from './activities/activities.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TopicsModule } from './topics/topics.module';
     StudyPlansModule,
     SubjectsModule,
     TopicsModule,
+    ActivitiesModule,
   ],
   controllers: [],
   providers: [
