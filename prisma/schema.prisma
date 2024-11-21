@@ -8,75 +8,70 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(35)
-  email      String   @unique
+  id         String       @id @default(uuid())
+  name       String       @db.VarChar(35)
+  email      String       @unique
   password   String
   token      String?
-  goal       String?  @db.VarChar(255)
+  goal       String?      @db.VarChar(255)
   dailyTime  Int?
-  totalHours Int      @default(0)
-  createdAt  DateTime @default(now())
-
-  StudyPlans StudyPlans[]
-  Subjects   Subjects[]
+  totalHours Int          @default(0)
+  createdAt  DateTime     @default(now())
   Activities Activities[]
   Reviews    Reviews[]
+  StudyPlans StudyPlans[]
+  Subjects   Subjects[]
 }
 
 model StudyPlans {
-  id         String          @id @default(uuid())
-  userId     String
-  name       String          @db.VarChar(55)
-  startDate  DateTime
-  endDate    DateTime?
-  goal       String          @db.VarChar(255)
-  hoursGoal  Int             @default(0)
-  hoursSpent Int             @default(0)
-  status     StudyPlanStatus @default(ACTIVE)
-  createdAt  DateTime        @default(now())
-
-  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String          @id @default(uuid())
+  userId       String
+  name         String          @db.VarChar(55)
+  startDate    DateTime
+  endDate      DateTime?
+  goal         String          @db.VarChar(255)
+  hoursGoal    Int             @default(0)
+  hoursSpent   Int             @default(0)
+  status       StudyPlanStatus @default(ACTIVE)
+  createdAt    DateTime        @default(now())
   PlanSubjects PlanSubjects[]
+  User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subjects {
-  id          String   @id @default(uuid())
-  userId      String
-  name        String   @db.VarChar(35)
-  description String   @db.VarChar(255)
-  timeSpent   Int      @default(0)
-  color       String
-  createdAt   DateTime @default(now())
-
-  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Topics       Topics[]
+  id           String         @id @default(uuid())
+  userId       String
+  name         String         @db.VarChar(35)
+  description  String         @db.VarChar(255)
+  timeSpent    Int            @default(0)
+  color        String
+  createdAt    DateTime       @default(now())
   Activities   Activities[]
   PlanSubjects PlanSubjects[]
+  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Topics       Topics[]
 }
 
 model PlanSubjects {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   studyPlanId String
   subjectId   String
-  priority    Int      @default(0) @map("priority_level")
-  hoursTarget Int?     @default(0)
-  createdAt   DateTime @default(now())
-
-  StudyPlans StudyPlans @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
-  Subjects   Subjects   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  hoursTarget Int?          @default(0)
+  createdAt   DateTime      @default(now())
+  priority    PriorityLevel @default(LOW) @map("priority_level")
+  StudyPlans  StudyPlans    @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+  Subjects    Subjects      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
 model Topics {
-  id          String   @id @default(uuid())
+  id          String       @id @default(uuid())
   subjectId   String
-  name        String   @db.VarChar(35)
-  description String   @db.VarChar(255)
-  timeSpent   Int      @default(0)
-  createdAt   DateTime @default(now())
-
-  Subjects   Subjects     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  Activities Activities[]
+  name        String       @db.VarChar(35)
+  description String       @db.VarChar(255)
+  timeSpent   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  Activities  Activities[]
+  Subjects    Subjects     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
 model Activities {
@@ -90,11 +85,10 @@ model Activities {
   questionsCorrect    Int?
   scheduledReviewDate DateTime?
   createdAt           DateTime  @default(now())
-
-  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Subjects Subjects @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  Topics   Topics   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  Reviews  Reviews?
+  Subjects            Subjects  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  Topics              Topics    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  User                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Reviews             Reviews?
 }
 
 model Reviews {
@@ -106,9 +100,8 @@ model Reviews {
   nextReviewAt   DateTime
   status         ReviewStatus @default(PENDING)
   createdAt      DateTime     @default(now())
-
-  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Activities Activities @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  Activities     Activities   @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  User           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum StudyPlanStatus {
@@ -121,4 +114,10 @@ enum ReviewStatus {
   PENDING
   COMPLETED
   SKIPPED
+}
+
+enum PriorityLevel {
+  LOW
+  MEDIUM
+  HIGH
 }

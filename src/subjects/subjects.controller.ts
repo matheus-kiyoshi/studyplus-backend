@@ -88,4 +88,19 @@ export class SubjectsController {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get(':id/study-plans')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get study plans for subject' })
+  getStudyPlansForSubject(
+    @Request() req: AuthRequest,
+    @Param('id') id: string,
+  ) {
+    if (req.user.id) {
+      return this.subjectsService.getStudyPlansForSubject(req.user.id, id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
 }

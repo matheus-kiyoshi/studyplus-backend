@@ -123,4 +123,29 @@ export class SubjectsService {
 
     return;
   }
+
+  async getStudyPlansForSubject(userId: string, id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const subject = await this.prisma.subjects.findUnique({
+      where: { id, userId },
+    });
+    if (!subject) {
+      throw new HttpException('Subject not found', 404);
+    }
+
+    const studyPlans = await this.prisma.studyPlans.findMany({
+      where: { PlanSubjects: { some: { subjectId: id } } },
+    });
+    if (!studyPlans) {
+      throw new HttpException('Study plans not found', 404);
+    }
+
+    return studyPlans;
+  }
 }

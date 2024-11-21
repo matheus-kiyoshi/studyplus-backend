@@ -127,4 +127,16 @@ export class UsersController {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('subjects')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user subjects' })
+  findUserSubjects(@Request() req: AuthRequest) {
+    if (req.user.id) {
+      return this.usersService.findUserSubjects(req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
 }

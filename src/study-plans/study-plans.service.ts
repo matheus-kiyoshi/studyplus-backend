@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
 import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { $Enums, Prisma } from '@prisma/client';
 
 @Injectable()
 export class StudyPlansService {
@@ -132,5 +132,68 @@ export class StudyPlansService {
     }
 
     return;
+  }
+
+  async assignSubjectToStudyPlan(
+    userId: string,
+    id: string,
+    assignSubjectToStudyPlanDto: {
+      subjectId: string;
+      priority: $Enums.PriorityLevel;
+      hoursGoal: number;
+    },
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const studyPlan = await this.prisma.studyPlans.findUnique({
+      where: { id, userId },
+    });
+    if (!studyPlan) {
+      throw new HttpException('Study plan not found', 404);
+    }
+
+    const data: Prisma.PlanSubjectsCreateInput = {
+      ...assignSubjectToStudyPlanDto,
+      StudyPlans: { connect: { id } },
+      Subjects: { connect: { id: assignSubjectToStudyPlanDto.subjectId } },
+    };
+
+    const createdPlanSubject = await this.prisma.planSubjects.create({ data });
+    if (!createdPlanSubject) {
+      throw new HttpException('Error assigning subject to study plan', 500);
+    }
+
+    return createdPlanSubject;
+  }
+
+  async getSubjectsByStudyPlan(userId: string, id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const studyPlan = await this.prisma.studyPlans.findUnique({
+      where: { id, userId },
+    });
+    if (!studyPlan) {
+      throw new HttpException('Study plan not found', 404);
+    }
+
+    const planSubjects = await this.prisma.planSubjects.findMany({
+      where: { studyPlanId: id },
+      include: { Subjects: true },
+    });
+    if (!planSubjects) {
+      throw new HttpException('Subjects not found', 404);
+    }
+
+    return planSubjects;
   }
 }

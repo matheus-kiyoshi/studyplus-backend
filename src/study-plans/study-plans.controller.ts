@@ -16,6 +16,7 @@ import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
 import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRequest } from '../auth/models/AuthRequest';
+import { $Enums } from '@prisma/client';
 
 @ApiTags('Study Plans')
 @Controller('study-plans')
@@ -84,6 +85,43 @@ export class StudyPlansController {
   remove(@Request() req: AuthRequest, @Param('id') id: string) {
     if (req.user.id) {
       return this.studyPlansService.remove(req.user.id, id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Post(':id/subjects')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Assign subject to study plan' })
+  assignSubjectToStudyPlan(
+    @Request() req: AuthRequest,
+    @Param('id') id: string,
+    @Body()
+    assignSubjectToStudyPlanDto: {
+      subjectId: string;
+      priority: $Enums.PriorityLevel;
+      hoursGoal: number;
+    },
+  ) {
+    if (req.user.id) {
+      return this.studyPlansService.assignSubjectToStudyPlan(
+        req.user.id,
+        id,
+        assignSubjectToStudyPlanDto,
+      );
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get(':id/subjects')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get study plan subjects' })
+  getSubjectsByStudyPlan(@Request() req: AuthRequest, @Param('id') id: string) {
+    if (req.user.id) {
+      return this.studyPlansService.getSubjectsByStudyPlan(req.user.id, id);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
