@@ -6,6 +6,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { StudyPlansModule } from './study-plans/study-plans.module';
 import { SubjectsModule } from './subjects/subjects.module';
+import { TopicsModule } from './topics/topics.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SubjectsModule } from './subjects/subjects.module';
     AuthModule,
     StudyPlansModule,
     SubjectsModule,
+    TopicsModule,
   ],
   controllers: [],
   providers: [
