@@ -7,10 +7,10 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateSubjectDto {
+export class CreateTopicDto {
   @ApiProperty({
-    example: 'Mathematics',
-    description: `The name of the subject.`,
+    example: 'Trigonometry',
+    description: `The name of the topic.`,
     required: true,
   })
   @IsString()
@@ -19,8 +19,9 @@ export class CreateSubjectDto {
   name: string;
 
   @ApiProperty({
-    example: 'Mathematics is the study of numbers, shapes, and patterns.',
-    description: `The description of the subject.`,
+    example:
+      'Trigonometry is a branch of mathematics that studies relationships between the sides and angles of triangles.',
+    description: `The description of the topic.`,
     required: true,
   })
   @IsString()
@@ -29,18 +30,10 @@ export class CreateSubjectDto {
 
   @ApiProperty({
     example: 100000,
-    description: `The total number of seconds dedicated to the subject.`,
+    description: `The total number of seconds dedicated to the topic.`,
     required: false,
   })
   @IsOptional()
   @IsNumber()
   timeSpent?: number;
-
-  @ApiProperty({
-    example: '#FF0000',
-    description: `The color of the subject.`,
-    required: true,
-  })
-  @IsString()
-  color: string;
 }
