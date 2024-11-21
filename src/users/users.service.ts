@@ -272,7 +272,6 @@ export class UsersService {
       where: { id: userId },
       include: { StudyPlans: true },
     });
-
     if (!user) {
       throw new HttpException('User not found', 404);
     }

@@ -117,7 +117,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth('JWT-auth')
-  @Get('studyplans')
+  @Get('/my/study-plans')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user study plans' })
   findUserStudyPlans(@Request() req: AuthRequest) {
@@ -129,7 +129,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth('JWT-auth')
-  @Get('subjects')
+  @Get('/my/subjects')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user subjects' })
   findUserSubjects(@Request() req: AuthRequest) {

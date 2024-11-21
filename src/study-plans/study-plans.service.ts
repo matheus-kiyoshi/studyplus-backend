@@ -2,7 +2,8 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
 import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { $Enums, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { AssignSubjectToStudyPlanDto } from './dto/assign-subject-to-study-plan.dto';
 
 @Injectable()
 export class StudyPlansService {
@@ -41,7 +42,7 @@ export class StudyPlansService {
   async findAll(userId: string) {
     const studyPlans = await this.prisma.studyPlans.findMany({
       where: { userId },
-      include: { User: false },
+      include: { User: false, PlanSubjects: true },
     });
     if (!studyPlans) {
       throw new HttpException('Study plans not found', 404);
@@ -60,7 +61,7 @@ export class StudyPlansService {
 
     const studyPlan = await this.prisma.studyPlans.findUnique({
       where: { id, userId },
-      include: { User: false },
+      include: { User: false, PlanSubjects: true },
     });
     if (!studyPlan) {
       throw new HttpException('Study plan not found', 404);
@@ -137,11 +138,8 @@ export class StudyPlansService {
   async assignSubjectToStudyPlan(
     userId: string,
     id: string,
-    assignSubjectToStudyPlanDto: {
-      subjectId: string;
-      priority: $Enums.PriorityLevel;
-      hoursGoal: number;
-    },
+    subjectId: string,
+    assignSubjectToStudyPlanDto: AssignSubjectToStudyPlanDto,
   ) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -157,10 +155,17 @@ export class StudyPlansService {
       throw new HttpException('Study plan not found', 404);
     }
 
+    const subject = await this.prisma.subjects.findUnique({
+      where: { id: subjectId, userId },
+    });
+    if (!subject) {
+      throw new HttpException('Subject not found', 404);
+    }
+
     const data: Prisma.PlanSubjectsCreateInput = {
       ...assignSubjectToStudyPlanDto,
       StudyPlans: { connect: { id } },
-      Subjects: { connect: { id: assignSubjectToStudyPlanDto.subjectId } },
+      Subjects: { connect: { id: subjectId } },
     };
 
     const createdPlanSubject = await this.prisma.planSubjects.create({ data });

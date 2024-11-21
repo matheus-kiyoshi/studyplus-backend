@@ -8,7 +8,13 @@ import { StudyPlansModule } from './study-plans/study-plans.module';
 import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, StudyPlansModule, SubjectsModule],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    AuthModule,
+    StudyPlansModule,
+    SubjectsModule,
+  ],
   controllers: [],
   providers: [
     {

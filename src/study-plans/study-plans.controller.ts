@@ -16,7 +16,7 @@ import { CreateStudyPlanDto } from './dto/create-study-plan.dto';
 import { UpdateStudyPlanDto } from './dto/update-study-plan.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRequest } from '../auth/models/AuthRequest';
-import { $Enums } from '@prisma/client';
+import { AssignSubjectToStudyPlanDto } from './dto/assign-subject-to-study-plan.dto';
 
 @ApiTags('Study Plans')
 @Controller('study-plans')
@@ -91,23 +91,20 @@ export class StudyPlansController {
   }
 
   @ApiBearerAuth('JWT-auth')
-  @Post(':id/subjects')
+  @Post(':id/subjects/:subjectId')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Assign subject to study plan' })
   assignSubjectToStudyPlan(
     @Request() req: AuthRequest,
     @Param('id') id: string,
-    @Body()
-    assignSubjectToStudyPlanDto: {
-      subjectId: string;
-      priority: $Enums.PriorityLevel;
-      hoursGoal: number;
-    },
+    @Param('subjectId') subjectId: string,
+    @Body() assignSubjectToStudyPlanDto: AssignSubjectToStudyPlanDto,
   ) {
     if (req.user.id) {
       return this.studyPlansService.assignSubjectToStudyPlan(
         req.user.id,
         id,
+        subjectId,
         assignSubjectToStudyPlanDto,
       );
     } else {
