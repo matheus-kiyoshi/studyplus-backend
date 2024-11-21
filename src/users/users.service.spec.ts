@@ -44,7 +44,7 @@ describe('UsersService', () => {
         name: 'Test User',
       };
 
-      prismaService.user.findUnique = jest.fn().mockResolvedValue(null); // Não existe um usuário com esse e-mail
+      prismaService.user.findUnique = jest.fn().mockResolvedValue(null);
       prismaService.user.create = jest.fn().mockResolvedValue({
         ...createUserDto,
         id: '123',
@@ -67,7 +67,7 @@ describe('UsersService', () => {
 
       prismaService.user.findUnique = jest
         .fn()
-        .mockResolvedValue(createUserDto); // Simula que o usuário já existe
+        .mockResolvedValue(createUserDto);
 
       await expect(service.create(createUserDto)).rejects.toThrow(
         HttpException,

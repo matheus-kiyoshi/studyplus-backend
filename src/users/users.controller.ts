@@ -115,4 +115,16 @@ export class UsersController {
   findBySearchArg(@Param('searchArg') searchArg: string) {
     return this.usersService.findBySearchArg(searchArg);
   }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('studyplans')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user study plans' })
+  findUserStudyPlans(@Request() req: AuthRequest) {
+    if (req.user.id) {
+      return this.usersService.findUserStudyPlans(req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
 }

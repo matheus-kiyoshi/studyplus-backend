@@ -8,6 +8,8 @@ import { RequestPasswordUserDto } from './dto/request-password-reset.dto';
 import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
+const now = new Date();
+
 const result = [
   {
     id: '1',
@@ -18,7 +20,7 @@ const result = [
     goal: 'goal',
     dailyTime: 1,
     totalHours: 1,
-    createdAt: new Date(),
+    createdAt: now,
   },
 ];
 
@@ -101,7 +103,7 @@ describe('UsersController', () => {
       goal: 'goal',
       dailyTime: 1,
       totalHours: 1,
-      createdAt: new Date(),
+      createdAt: now,
     });
     expect(await controller.update(req, updateUserDto)).toEqual({
       ...updateUserDto,
@@ -113,7 +115,7 @@ describe('UsersController', () => {
       goal: 'goal',
       dailyTime: 1,
       totalHours: 1,
-      createdAt: new Date(),
+      createdAt: now,
     });
     expect(service.update).toHaveBeenCalledWith(req.user.id, updateUserDto);
   });
