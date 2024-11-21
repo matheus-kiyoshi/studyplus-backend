@@ -5,9 +5,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { StudyPlansModule } from './study-plans/study-plans.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, StudyPlansModule],
+  imports: [PrismaModule, UsersModule, AuthModule, StudyPlansModule, SubjectsModule],
   controllers: [],
   providers: [
     {
