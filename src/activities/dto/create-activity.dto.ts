@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateActivityDto {
   @ApiProperty({
@@ -37,11 +37,11 @@ export class CreateActivityDto {
   questionsCorrect?: number;
 
   @ApiProperty({
-    example: '2021-09-07T12',
-    description: `The scheduled review date of the activity.`,
+    example: true,
+    description: `Whether a review was created after the activity.`,
     required: false,
   })
   @IsOptional()
-  @IsDateString()
-  scheduledReviewDate?: Date;
+  @IsBoolean()
+  createReview?: boolean;
 }
