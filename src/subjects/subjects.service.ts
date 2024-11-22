@@ -41,6 +41,13 @@ export class SubjectsService {
   }
 
   async findAll(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
     const subjects = await this.prisma.subjects.findMany({
       where: { userId },
       include: { User: false, PlanSubjects: true },
