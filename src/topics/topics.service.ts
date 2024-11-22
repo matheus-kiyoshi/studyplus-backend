@@ -20,6 +20,20 @@ export class TopicsService {
       throw new HttpException('User not found', 404);
     }
 
+    const subject = await this.prisma.subjects.findUnique({
+      where: { id: subjectId },
+    });
+    if (!subject) {
+      throw new HttpException('Subject not found', 404);
+    }
+
+    const topic = await this.prisma.topics.findFirst({
+      where: { subjectId, name: createTopicDto.name },
+    });
+    if (topic) {
+      throw new HttpException('Topic already exists', 400);
+    }
+
     const data: Prisma.TopicsCreateInput = {
       ...createTopicDto,
       Subjects: { connect: { id: subjectId } },

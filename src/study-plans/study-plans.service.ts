@@ -17,6 +17,13 @@ export class StudyPlansService {
       throw new HttpException('User not found', 404);
     }
 
+    const studyPlan = await this.prisma.studyPlans.findFirst({
+      where: { userId, name: createStudyPlanDto.name },
+    });
+    if (studyPlan) {
+      throw new HttpException('Study plan already exists', 400);
+    }
+
     const data: Prisma.StudyPlansCreateInput = {
       ...createStudyPlanDto,
       startDate: new Date(createStudyPlanDto.startDate),

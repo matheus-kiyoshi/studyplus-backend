@@ -4,6 +4,9 @@ CREATE TYPE "StudyPlanStatus" AS ENUM ('ACTIVE', 'COMPLETED', 'CANCELLED');
 -- CreateEnum
 CREATE TYPE "ReviewStatus" AS ENUM ('PENDING', 'COMPLETED', 'SKIPPED');
 
+-- CreateEnum
+CREATE TYPE "PriorityLevel" AS ENUM ('LOW', 'MEDIUM', 'HIGH');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -40,7 +43,7 @@ CREATE TABLE "Subjects" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "name" VARCHAR(35) NOT NULL,
-    "description" VARCHAR(255) NOT NULL,
+    "description" VARCHAR(255),
     "timeSpent" INTEGER NOT NULL DEFAULT 0,
     "color" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -53,9 +56,9 @@ CREATE TABLE "PlanSubjects" (
     "id" TEXT NOT NULL,
     "studyPlanId" TEXT NOT NULL,
     "subjectId" TEXT NOT NULL,
-    "priority_level" INTEGER NOT NULL DEFAULT 0,
     "hoursTarget" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "priority_level" "PriorityLevel" NOT NULL DEFAULT 'LOW',
 
     CONSTRAINT "PlanSubjects_pkey" PRIMARY KEY ("id")
 );
@@ -106,6 +109,15 @@ CREATE TABLE "Reviews" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "StudyPlans_name_key" ON "StudyPlans"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Subjects_name_key" ON "Subjects"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Topics_name_key" ON "Topics"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Reviews_activityId_key" ON "Reviews"("activityId");
 
 -- AddForeignKey
@@ -124,16 +136,16 @@ ALTER TABLE "PlanSubjects" ADD CONSTRAINT "PlanSubjects_subjectId_fkey" FOREIGN 
 ALTER TABLE "Topics" ADD CONSTRAINT "Topics_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subjects"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Activities" ADD CONSTRAINT "Activities_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Activities" ADD CONSTRAINT "Activities_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subjects"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Activities" ADD CONSTRAINT "Activities_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES "Topics"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Activities" ADD CONSTRAINT "Activities_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_activityId_fkey" FOREIGN KEY ("activityId") REFERENCES "Activities"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

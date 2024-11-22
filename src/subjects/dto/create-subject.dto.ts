@@ -21,11 +21,12 @@ export class CreateSubjectDto {
   @ApiProperty({
     example: 'Mathematics is the study of numbers, shapes, and patterns.',
     description: `The description of the subject.`,
-    required: true,
+    required: false,
   })
+  @IsOptional()
   @IsString()
   @MaxLength(255)
-  description: string;
+  description?: string;
 
   @ApiProperty({
     example: 100000,

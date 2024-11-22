@@ -4,7 +4,7 @@ export class Subject implements Prisma.SubjectsUncheckedCreateInput {
   id?: string;
   userId: string;
   name: string;
-  description: string;
+  description?: string;
   timeSpent?: number;
   color: string;
   createdAt?: string | Date;

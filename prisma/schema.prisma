@@ -36,13 +36,15 @@ model StudyPlans {
   createdAt    DateTime        @default(now())
   PlanSubjects PlanSubjects[]
   User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
 }
 
 model Subjects {
   id           String         @id @default(uuid())
   userId       String
   name         String         @db.VarChar(35)
-  description  String         @db.VarChar(255)
+  description  String?        @db.VarChar(255)
   timeSpent    Int            @default(0)
   color        String
   createdAt    DateTime       @default(now())
@@ -50,6 +52,8 @@ model Subjects {
   PlanSubjects PlanSubjects[]
   User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Topics       Topics[]
+
+  @@unique([userId, name])
 }
 
 model PlanSubjects {
@@ -72,6 +76,8 @@ model Topics {
   createdAt   DateTime     @default(now())
   Activities  Activities[]
   Subjects    Subjects     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([subjectId, name])
 }
 
 model Activities {

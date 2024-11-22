@@ -16,6 +16,13 @@ export class SubjectsService {
       throw new HttpException('User not found', 404);
     }
 
+    const subject = await this.prisma.subjects.findFirst({
+      where: { userId, name: createSubjectDto.name },
+    });
+    if (subject) {
+      throw new HttpException('Subject already exists', 400);
+    }
+
     const data: Prisma.SubjectsCreateInput = {
       ...createSubjectDto,
       User: { connect: { id: userId } },
