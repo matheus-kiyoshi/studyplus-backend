@@ -17,7 +17,21 @@ export class CreateUserDto extends User {
     type: 'string',
     required: true,
   })
-  @IsEmail()
+  @IsEmail({
+    host_whitelist: [
+      'gmail.com',
+      'hotmail.com',
+      'outlook.com',
+      'yahoo.com',
+      'icloud.com',
+      'protonmail.com',
+      'zoho.com',
+      'aol.com',
+      'mail.com',
+      'gmx.com',
+      'tutanota.com',
+    ],
+  })
   email: string;
 
   @ApiProperty({
