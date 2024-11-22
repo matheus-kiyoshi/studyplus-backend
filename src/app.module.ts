@@ -8,6 +8,7 @@ import { StudyPlansModule } from './study-plans/study-plans.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TopicsModule } from './topics/topics.module';
 import { ActivitiesModule } from './activities/activities.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ActivitiesModule } from './activities/activities.module';
     SubjectsModule,
     TopicsModule,
     ActivitiesModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [

@@ -25,18 +25,25 @@ export class ActivitiesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create activity' })
-  create(
+  async create(
     @Request() req: AuthRequest,
     @Param('subjectId') subjectId: string,
     @Param('topicId') topicId: string,
     @Body() createActivityDto: CreateActivityDto,
   ) {
-    return this.activitiesService.create(
+    const activity = await this.activitiesService.create(
       req.user.id,
       subjectId,
       topicId,
       createActivityDto,
     );
+
+    await this.activitiesService.createReviewForActivity(
+      req.user.id,
+      activity.id,
+    );
+
+    return activity;
   }
 
   @ApiBearerAuth('JWT-auth')

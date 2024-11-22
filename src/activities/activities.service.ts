@@ -3,10 +3,14 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { ReviewsService } from 'src/reviews/reviews.service';
 
 @Injectable()
 export class ActivitiesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly reviewsService: ReviewsService,
+  ) {}
 
   async create(
     userId: string,
@@ -217,5 +221,11 @@ export class ActivitiesService {
     }
 
     return;
+  }
+
+  async createReviewForActivity(userId: string, activityId: string) {
+    const review = await this.reviewsService.create(userId, activityId);
+
+    return review;
   }
 }
