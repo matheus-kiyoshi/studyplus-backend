@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDateString, IsNumber, IsOptional } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateActivityDto {
   @ApiProperty({
@@ -35,13 +35,4 @@ export class CreateActivityDto {
   @IsOptional()
   @IsNumber()
   questionsCorrect?: number;
-
-  @ApiProperty({
-    example: true,
-    description: `Whether a review was created after the activity.`,
-    required: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  createReview?: boolean;
 }

@@ -1,4 +1,3 @@
-import { User } from '../entities/user.entity';
 import {
   IsEmail,
   IsNumber,
@@ -10,7 +9,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto extends User {
+export class CreateUserDto {
   @ApiProperty({
     example: 'user@email.com',
     description: `The email will be used to identify the user in the application and will be used to login.`,

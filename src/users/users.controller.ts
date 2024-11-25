@@ -50,6 +50,14 @@ export class UsersController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @Get('/profile/data')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all user data' })
+  getUserData(@Request() req: AuthRequest) {
+    return this.usersService.getUserData(req.user.id);
+  }
+
+  @ApiBearerAuth('JWT-auth')
   @Patch()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user informations' })

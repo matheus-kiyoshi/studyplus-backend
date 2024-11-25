@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedError } from './errors/unauthorized.error';
@@ -6,13 +6,18 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
+import { OAuth2Client } from 'google-auth-library';
+import { GoogleLoginRequestBody } from './models/GoogleLoginRequestBody';
 
 @Injectable()
 export class AuthService {
+  private oauthClient: OAuth2Client;
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UsersService,
-  ) {}
+  ) {
+    this.oauthClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  }
 
   async login(user: User): Promise<UserToken> {
     const payload: UserPayload = {
@@ -23,6 +28,43 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async loginWithGoogle({
+    idToken,
+  }: GoogleLoginRequestBody): Promise<UserToken> {
+    if (!idToken) throw new HttpException('Invalid Google ID Token', 400);
+    const ticket = await this.oauthClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) {
+      throw new HttpException('Invalid Google ID Token', 400);
+    }
+
+    const { email, name } = payload;
+
+    let user: Partial<User> = await this.userService.findByEmail(email);
+
+    if (!user) {
+      user = await this.userService.create({
+        email,
+        name,
+        password: null,
+      });
+    }
+
+    const jwtPayload: UserPayload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    return {
+      access_token: this.jwtService.sign(jwtPayload),
     };
   }
 

@@ -14,6 +14,7 @@ import { AuthRequest } from './models/AuthRequest';
 import { IsPublic } from './decorators/is-public.decorator';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { LoginRequestBody } from './models/LoginRequestBody';
+import { GoogleLoginRequestBody } from './models/GoogleLoginRequestBody';
 
 @ApiTags('Auth')
 @Controller()
@@ -31,6 +32,14 @@ export class AuthController {
     @Body() loginRequestBody: LoginRequestBody,
   ) {
     return this.authService.login(req.user);
+  }
+
+  @IsPublic()
+  @Post('google-login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login user with Google and return access token' })
+  async googleLogin(@Body() googleLoginRequestBody: GoogleLoginRequestBody) {
+    return this.authService.loginWithGoogle(googleLoginRequestBody);
   }
 
   @ApiBearerAuth('JWT-auth')

@@ -44,9 +44,15 @@ export class UsersService {
       throw new HttpException('User already exists', 400);
     }
 
+    let hashedPassword: string | null = null;
+
+    if (createUserDto.password) {
+      hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    }
+
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
-      password: await bcrypt.hash(createUserDto.password, 10),
+      password: hashedPassword,
     };
 
     const createdUser = await this.prisma.user.create({ data });
@@ -83,6 +89,44 @@ export class UsersService {
     if (!user) {
       throw new HttpException('User not found', 404);
     }
+
+    return user;
+  }
+
+  async getUserData(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        ...prismaExclude('User', ['password']),
+        createdAt: false,
+        email: false,
+        token: false,
+        StudyPlans: true,
+        Subjects: true,
+        Activities: true,
+        Reviews: true,
+      },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const topics = await this.prisma.topics.findMany({
+      where: { subjectId: { in: user.Subjects.map((subject) => subject.id) } },
+    });
+    if (!topics) {
+      throw new HttpException('Error finding topics', 500);
+    }
+
+    user.Subjects = user.Subjects.map((subject) => {
+      const subjectTopics = topics.filter(
+        (topic) => topic.subjectId === subject.id,
+      );
+      return {
+        ...subject,
+        Topics: subjectTopics,
+      };
+    });
 
     return user;
   }
