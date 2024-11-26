@@ -53,6 +53,8 @@ export class UsersService {
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
       password: hashedPassword,
+      googleAccountLinked: (hashedPassword === null) ? true : false,
+      googleEmail: (hashedPassword === null) ? createUserDto.email : null,
     };
 
     const createdUser = await this.prisma.user.create({ data });
@@ -62,7 +64,6 @@ export class UsersService {
 
     return {
       ...createdUser,
-      id: undefined,
       password: undefined,
     };
   }
@@ -135,6 +136,15 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new Error('User not found');
+    }
+
+    return user;
+  }
+
+  async findByEmailOrReturnNull(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return null;
     }
 
     return user;
@@ -290,6 +300,54 @@ export class UsersService {
       ...updatedUser,
       password: undefined,
     };
+  }
+
+  async updateUserLinks(id: string, googleEmail: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const existingUserWithGoogleEmail = await this.prisma.user.findUnique({
+      where: { googleEmail },
+    });
+    if (existingUserWithGoogleEmail) {
+      throw new HttpException(
+        'This Google account is already linked to another user',
+        400,
+      );
+    }
+
+    if (user.googleAccountLinked) {
+      throw new HttpException('User already linked to Google Account', 400);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        googleEmail,
+        googleAccountLinked: true,
+      },
+    });
+    if (!updatedUser) {
+      throw new HttpException('Error linking account', 500);
+    }
+
+    return {
+      ...updatedUser,
+      password: undefined,
+    };
+  }
+
+  async findByGoogleEmail(googleEmail: string): Promise<User | undefined> {
+    const user = await this.prisma.user.findUnique({
+      where: { googleEmail },
+    });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user;
   }
 
   async findBySearchArg(searchArg: string) {

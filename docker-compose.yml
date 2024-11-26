@@ -9,6 +9,9 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:12345@db:5432/studyplus?schema=public
+    volumes:
+      - ./src:/usr/src/app/src
+      - /usr/src/app/node_modules
     command: >
       sh -c "npx prisma migrate deploy &&
              npm run start:prod"

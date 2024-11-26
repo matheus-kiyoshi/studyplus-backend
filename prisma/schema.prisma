@@ -1,27 +1,29 @@
 generator client {
-  provider = "prisma-client-js" 
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:12345@localhost:5432/studyplus?schema=public"
 }
 
 model User {
-  id         String       @id @default(uuid())
-  name       String       @db.VarChar(35)
-  email      String       @unique
-  password   String
-  token      String?
-  goal       String?      @db.VarChar(255)
-  dailyTime  Int?
-  totalHours Int          @default(0)
-  createdAt  DateTime     @default(now())
-  Activities Activities[]
-  Reviews    Reviews[]
-  StudyPlans StudyPlans[]
-  Subjects   Subjects[]
+  id                  String       @id @default(uuid())
+  name                String       @db.VarChar(35)
+  email               String       @unique
+  password            String?
+  token               String?
+  goal                String?      @db.VarChar(255)
+  dailyTime           Int?
+  totalHours          Int          @default(0)
+  googleAccountLinked Boolean      @default(false)
+  googleEmail         String?      @unique
+  createdAt           DateTime     @default(now())
+  Activities          Activities[]
+  Reviews             Reviews[]
+  StudyPlans          StudyPlans[]
+  Subjects            Subjects[]
 }
 
 model StudyPlans {
