@@ -49,4 +49,12 @@ export class AuthController {
   getProfile(@Request() req: AuthRequest) {
     return req.user;
   }
+
+  @IsPublic()
+  @Get('health')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Health check' })
+  healthCheck() {
+    return 'OK';
+  }
 }
